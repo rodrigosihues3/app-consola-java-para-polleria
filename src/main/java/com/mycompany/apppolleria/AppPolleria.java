@@ -4,117 +4,22 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
 import com.mycompany.apppolleria.clases.Clientes;
+import com.mycompany.apppolleria.clases.Datos;
 import com.mycompany.apppolleria.clases.Menus;
 import com.mycompany.apppolleria.clases.Mesas;
 import com.mycompany.apppolleria.clases.Productos;
+import com.mycompany.apppolleria.clases.Repositorio;
 import com.mycompany.apppolleria.clases.Ventas;
 
 public class AppPolleria {
-
-  // public static final String ANSI_RESET = "\u001B[0m";
-  // public static final String ANSI_RED = "\u001B[31m";
-  // public static final String ANSI_GREEN = "\u001B[32m";
-
   public static void main(String[] args) {
-
     Scanner scanner = new Scanner(System.in);
-
-    Ventas[] listaVentasAnteriores = new Ventas[0]; // Arreglo para almacenar las ventas anteriores
-    Ventas[] listaVentasDelDia = new Ventas[0]; // Arreglo para almacenar las ventas
-    Clientes[] listaClientes = new Clientes[0]; // Arreglo para almacenar los clientes
-    Mesas[] mesas = new Mesas[0]; // Arreglo para almacenar las mesas
-    Productos[] listaProductosPollos = new Productos[0]; // Arreglo para almacenar los productos de pollos
-    Productos[] listaProductosEnsaladas = new Productos[0]; // Arreglo para almacenar los productos de ensaladas
-    Productos[] listaProductosPostres = new Productos[0]; // Arreglo para almacenar los productos de postres
-    Productos[] listaProductosBebidas = new Productos[0]; // Arreglo para almacenar los productos de bebidas
-
-    mesas = inicializarMesas(mesas); // Inicializar las mesas
-
-    // INICIALIZACIÓN DE DATOS DEL NEGOCIO
-    listaProductosPollos = agregarProducto(listaProductosPollos, new Productos("1/8 Mostrito", 15.00,
-        new String[] { "arroz chaufa", "papas fritas", "1/8 pollo", "ensalada" }));
-    listaProductosPollos = agregarProducto(listaProductosPollos, new Productos("1/8 Pollo a la brasa", 12.00,
-        new String[] { "1/8 pollo", "papas fritas", "ensalada" }));
-    listaProductosPollos = agregarProducto(listaProductosPollos, new Productos("1/4 Pollo a la brasa", 18.00,
-        new String[] { "1/4 pollo", "papas fritas", "ensalada" }));
-    listaProductosPollos = agregarProducto(listaProductosPollos, new Productos("1/2 Pollo a la brasa", 28.00,
-        new String[] { "1/2 pollo", "papas fritas", "ensalada" }));
-    listaProductosPollos = agregarProducto(listaProductosPollos, new Productos("Pollo entero a la brasa", 52.00,
-        new String[] { "1 pollo", "papas familiares", "ensalada grande" }));
-
-    listaProductosEnsaladas = agregarProducto(listaProductosEnsaladas, new Productos("Ensalada clásica", 5.00,
-        new String[] { "lechuga", "tomate", "zanahoria", "limón" }));
-    listaProductosEnsaladas = agregarProducto(listaProductosEnsaladas, new Productos("Ensalada rusa", 6.00,
-        new String[] { "papa", "zanahoria", "arveja", "mayonesa" }));
-    listaProductosEnsaladas = agregarProducto(listaProductosEnsaladas, new Productos("Ensalada de col", 5.00,
-        new String[] { "col", "zanahoria", "crema" }));
-    listaProductosEnsaladas = agregarProducto(listaProductosEnsaladas, new Productos("Ensalada mixta", 6.50,
-        new String[] { "lechuga", "tomate", "pepino", "zanahoria", "limón" }));
-    listaProductosEnsaladas = agregarProducto(listaProductosEnsaladas, new Productos("Ensalada con palta", 7.00,
-        new String[] { "palta", "lechuga", "tomate", "aceite de oliva" }));
-
-    listaProductosPostres = agregarProducto(listaProductosPostres, new Productos("Helado personal", 4.00,
-        new String[] { "vaso de helado", "sabor a elección" }));
-    listaProductosPostres = agregarProducto(listaProductosPostres, new Productos("Gelatina", 3.00,
-        new String[] { "gelatina sabor fresa", "vasito" }));
-    listaProductosPostres = agregarProducto(listaProductosPostres, new Productos("Mazamorra morada", 4.00,
-        new String[] { "maíz morado", "canela", "fruta picada" }));
-    listaProductosPostres = agregarProducto(listaProductosPostres, new Productos("Arroz con leche", 4.00,
-        new String[] { "arroz cocido", "leche", "canela", "pasas" }));
-    listaProductosPostres = agregarProducto(listaProductosPostres,
-        new Productos("Combo de postres", 7.00, new String[] { "mazamorra", "arroz con leche", "mitad y mitad" }));
-
-    listaProductosBebidas = agregarProducto(listaProductosBebidas,
-        new Productos("Inca Kola personal 500ml", 3.50, null));
-    listaProductosBebidas = agregarProducto(listaProductosBebidas,
-        new Productos("Inca Kola 1Lt", 6.00, null));
-    listaProductosBebidas = agregarProducto(listaProductosBebidas,
-        new Productos("Coca-Cola personal 500ml", 3.50, null));
-    listaProductosBebidas = agregarProducto(listaProductosBebidas,
-        new Productos("Jarra de chicha morada 1Lt", 8.00, null));
-    listaProductosBebidas = agregarProducto(listaProductosBebidas,
-        new Productos("Agua mineral 500ml", 2.50, null));
-
-    listaClientes = agregarCliente(listaClientes, new Clientes("JUAN", "PERÉZ RAMIREZ", "12345678", "987654321"));
-    listaClientes = agregarCliente(listaClientes, new Clientes("ANA", "GÓMEZ RUIZ", "87654321", "923456789"));
-    listaClientes = agregarCliente(listaClientes, new Clientes("LUIS", "MARTÍNEZ TOMAYA", "11223344", "956789123"));
-    listaClientes = agregarCliente(listaClientes, new Clientes("MARIA", "LÓPEZ OCHOA", "44332211", "921654987"));
-    listaClientes = agregarCliente(listaClientes, new Clientes("RODRIGO", "SIHUES YANQUI", "74663928", "987654321"));
-
-    listaVentasAnteriores = agregarVenta(listaVentasAnteriores,
-        new Ventas(1, "JUAN", listaClientes[1], "Consumo en local", mesas[1],
-            new Productos[] { listaProductosPollos[1], listaProductosEnsaladas[1], listaProductosBebidas[1] },
-            3, 24, "Efectivo", LocalDateTime.of(2025, 7, 12, 11, 0)));
-
-    listaVentasAnteriores = agregarVenta(listaVentasAnteriores,
-        new Ventas(2, "LUIS", listaClientes[1], "Para llevar", mesas[2],
-            new Productos[] { listaProductosPollos[2], listaProductosPostres[1] },
-            2, 21, "Yape / Plin", LocalDateTime.of(2025, 7, 12, 13, 30)));
-
-    listaVentasAnteriores = agregarVenta(listaVentasAnteriores,
-        new Ventas(3, "MARÍA", listaClientes[2], "Consumo en local", mesas[3],
-            new Productos[] { listaProductosPollos[2], listaProductosBebidas[0], listaProductosPostres[0] },
-            3, 25.5, "Tarjeta de crédito", LocalDateTime.of(2025, 7, 12, 16, 15)));
-
-    listaVentasDelDia = agregarVenta(listaVentasDelDia,
-        new Ventas(1, "JUAN", listaClientes[3], "Consumo en local", mesas[0],
-            new Productos[] { listaProductosPollos[0], listaProductosEnsaladas[0], listaProductosBebidas[0] },
-            3, 23, "Efectivo", LocalDateTime.now()));
-    listaVentasDelDia = agregarVenta(listaVentasDelDia,
-        new Ventas(2, "JUAN", listaClientes[3], "Consumo en local", mesas[0],
-            new Productos[] { listaProductosPollos[0], listaProductosEnsaladas[0], listaProductosBebidas[0] },
-            3, 23.5, "Efectivo", LocalDateTime.now()));
-    listaVentasDelDia = agregarVenta(listaVentasDelDia,
-        new Ventas(3, "JUAN", listaClientes[3], "Consumo en local", mesas[0],
-            new Productos[] { listaProductosPollos[0], listaProductosEnsaladas[1], listaProductosBebidas[1] },
-            3, 27, "Efectivo", LocalDateTime.now()));
-    listaVentasDelDia = agregarVenta(listaVentasDelDia,
-        new Ventas(4, "JUAN", listaClientes[1], "Consumo en local", mesas[0],
-            new Productos[] { listaProductosPollos[0], listaProductosEnsaladas[1], listaProductosBebidas[1] },
-            3, 27, "Efectivo", LocalDateTime.now()));
+    Datos datos = Datos.cargar();
 
     // MENU PRINCIPAL
     Menus menuPrincipal = new Menus("POLLERIA - MENU PRINCIPAL",
@@ -127,7 +32,7 @@ public class AppPolleria {
             "Salir"
         });
 
-    // 1. SUB MENU REALIZAR PEDIDO, antes se toman los datos del cliente
+    // 1. SUB MENU REALIZAR PEDIDO
     Menus menuRealizarVenta = new Menus("SELECCIONE LOS PRODUCTOS DEL PEDIDO",
         new String[] {
             "Pollos",
@@ -137,15 +42,6 @@ public class AppPolleria {
             "Generar venta",
             "Cancelar venta"
         });
-
-    // SUB MENU DE REALIZAR PEDIDO - POLLOS
-    Menus subMenuRealizarPedidoPollos = new Menus("POLLOS", enviarOpciones(listaProductosPollos));
-    // SUB MENU DE REALIZAR PEDIDO - ENSALADAS
-    Menus subMenuRealizarPedidoEnsaladas = new Menus("ENSALADAS", enviarOpciones(listaProductosEnsaladas));
-    // SUB MENU DE REALIZAR PEDIDO - POSTRES
-    Menus subMenuRealizarPedidoPostres = new Menus("POSTRES", enviarOpciones(listaProductosPostres));
-    // SUB MENU DE REALIZAR PEDIDO - BEBIDAS
-    Menus subMenuRealizarPedidoBebidas = new Menus("BEBIDAS", enviarOpciones(listaProductosBebidas));
 
     // SUB MENU DE MÉTODO DE PAGO
     Menus subMenuMetodoPago = new Menus("MÉTODO DE PAGO",
@@ -167,12 +63,13 @@ public class AppPolleria {
             "Volver al menu principal"
         });
 
-    // 3. SUB MENU GESTIONAR VENTAS
+    // 3. SUB MENU GESTIONAR CLIENTES
     Menus menuGestionarClientes = new Menus("MENU - GESTIONAR CLIENTES",
         new String[] {
             "Listar clientes",
             "Buscar cliente",
             "Registrar cliente",
+            "Eliminar cliente",
             "Volver al menu principal"
         });
 
@@ -185,7 +82,7 @@ public class AppPolleria {
             "Volver al menu principal"
         });
 
-    // 5. SUB MENU GESTIONAR PRODUCTOS
+    // 5. SUB MENU GESTIONAR REPORTES
     Menus menuReportes = new Menus("MENU - REPORTES Y ESTADISTICAS",
         new String[] {
             "Reporte del dia",
@@ -195,36 +92,60 @@ public class AppPolleria {
             "Volver al menu principal"
         });
 
-    String nombreEncargado = "JUAN"; // Nombre del encargado
+    String nombreEncargado = "MARCOS"; // Nombre del encargado
 
     // BUCLE PRINCIPAL - INICIO DEL PROGRAMA
-    int opcionMenuPrincipal;
+    String opcionMenuPrincipal;
     boolean iniciarPrograma = true;
     do {
+      // SUBMENUS DINÁMICOS DE PRODUCTOS
+      Menus subMenuRealizarPedidoPollos = new Menus("POLLOS", enviarOpciones(datos.productosPollos.obtenerTodos()));
+      Menus subMenuRealizarPedidoEnsaladas = new Menus("ENSALADAS",
+          enviarOpciones(datos.productosEnsaladas.obtenerTodos()));
+      Menus subMenuRealizarPedidoPostres = new Menus("POSTRES", enviarOpciones(datos.productosPostres.obtenerTodos()));
+      Menus subMenuRealizarPedidoBebidas = new Menus("BEBIDAS", enviarOpciones(datos.productosBebidas.obtenerTodos()));
+
+      List<Ventas> ventasDeHoy = datos.ventas
+          .filtrar(v -> v.getFechaVenta() != null && v.getFechaVenta().toLocalDate().equals(LocalDate.now()));
+      List<Ventas> ventasAnteriores = datos.ventas
+          .filtrar(v -> v.getFechaVenta() != null && v.getFechaVenta().toLocalDate().isBefore(LocalDate.now()));
+      List<Clientes> listaClientes = datos.clientes.obtenerTodos();
+
       System.out.print(menuPrincipal);
-      opcionMenuPrincipal = scanner.nextInt();
-      scanner.nextLine(); // Limpiar el buffer
+      opcionMenuPrincipal = scanner.nextLine();
+
+      if (validarEntrada(opcionMenuPrincipal, 1, 6, "ENTERO-OPCIONES")) {
+        System.out.println("Opción no válida, por favor intente de nuevo.");
+        continue;
+      }
 
       switch (opcionMenuPrincipal) {
-        case 1 -> { // REALIZAR VENTA
+        case "1" -> // REALIZAR VENTA
+        {
           Ventas venta = new Ventas();
           menuRealizarVenta.setTitulo("SELECCIONE LOS PRODUCTOS DEL PEDIDO");
 
           // PROCESO PARA BUSCAR CLIENTE
-          Clientes cliente;
+          Clientes cliente = null;
           String dniCliente;
           String nombresCliente = "CLIENTE";
-          String apellidosCliente;
+          String apellidosCliente = "";
           String celularCliente = "000000000";
 
           // MENU PARA INGRESAR O BUSCAR CLIENTE
           boolean iniciarMenuCliente = true;
           do {
             System.out.print("\nIngrese el DNI del cliente: ");
-            dniCliente = scanner.next();
-            scanner.nextLine(); // Limpiar el buffer
+            dniCliente = scanner.nextLine();
 
-            cliente = Clientes.buscarClienteDNI(listaClientes, dniCliente);
+            if (validarEntrada(dniCliente, 8, 8, "ENTERO-DATO")) {
+              System.out.println("DNI inválido. Debe contener exactamente 8 caracteres numéricos.");
+              continue;
+            }
+
+            // BÚSQUEDA USANDO EL REPOSITORIO USANDO LAMBDA
+            String dniBusqueda = dniCliente;
+            cliente = datos.clientes.buscar(c -> c.getDni().equals(dniBusqueda));
 
             if (cliente != null) {
               nombresCliente = cliente.getNombres();
@@ -242,38 +163,86 @@ public class AppPolleria {
 
               iniciarMenuCliente = false;
             } else {
-              mostrarMenu(
-                  "CLIENTE NO ENCONTRADO",
-                  "¿Desea registrar al cliente?",
-                  "*",
-                  "Sí", "No, continuar la venta", "No, volver a ingresar el DNI");
-              int opcionRegistrarCliente = scanner.nextInt();
-              scanner.nextLine(); // Limpiar el buffer
+              String opcionRegistrarCliente;
+
+              while (true) {
+                mostrarMenu(
+                    "CLIENTE NO ENCONTRADO",
+                    "¿Desea registrar al cliente?",
+                    "*",
+                    "Sí", "No, continuar la venta", "No, volver a ingresar el DNI");
+                opcionRegistrarCliente = scanner.nextLine();
+
+                if (validarEntrada(opcionRegistrarCliente, 1, 3, "ENTERO-OPCIONES")) {
+                  System.out.println("Opción no válida, por favor intente de nuevo.");
+                  continue;
+                }
+
+                break;
+              }
 
               switch (opcionRegistrarCliente) {
-                case 1 -> {
+                case "1" -> // Registrar nuevo cliente
+                {
                   System.out.println("\n" + "#".repeat(50));
                   System.out.println(
                       "|" + Menus.centrarTexto(48, "INGRESE LOS DATOS DEL CLIENTE") + "|");
                   System.out.println("#".repeat(50));
-                  System.out.printf("  %-10s: ", "DNI");
-                  dniCliente = scanner.next();
-                  scanner.nextLine(); // Limpiar el buffer
-                  System.out.printf("  %-10s: ", "Nombre");
-                  nombresCliente = scanner.nextLine();
-                  System.out.printf("  %-10s: ", "Apellidos");
-                  apellidosCliente = scanner.nextLine();
-                  System.out.printf("  %-10s: ", "Celular");
-                  celularCliente = scanner.nextLine();
+
+                  while (true) {
+                    System.out.printf("  %-10s: ", "DNI");
+                    dniCliente = scanner.nextLine();
+                    if (validarEntrada(dniCliente, 8, 8, "ENTERO-DATO")) {
+                      System.out.println("DNI inválido. Debe contener exactamente 8 caracteres numéricos.\n");
+                      continue;
+                    }
+                    Clientes clienteExistente = Clientes.buscarClienteDNI(listaClientes, dniCliente);
+                    if (clienteExistente != null) {
+                      System.out.println("El DNI ya está registrado. Por favor ingrese un DNI diferente.\n");
+                      continue;
+                    }
+                    break;
+                  }
+
+                  while (true) {
+                    System.out.printf("  %-10s: ", "Nombres");
+                    nombresCliente = scanner.nextLine().toUpperCase();
+                    if (validarEntrada(nombresCliente, 1, 100, "TEXTO")) {
+                      System.out.println("Nombres inválidos. Deben contener caracteres alfabéticos.\n");
+                      continue;
+                    }
+                    break;
+                  }
+
+                  while (true) {
+                    System.out.printf("  %-10s: ", "Apellidos");
+                    apellidosCliente = scanner.nextLine().toUpperCase();
+                    if (validarEntrada(apellidosCliente, 1, 100, "TEXTO")) {
+                      System.out.println("Apellidos inválidos. Deben contener caracteres alfabéticos.\n");
+                      continue;
+                    }
+                    break;
+                  }
+
+                  while (true) {
+                    System.out.printf("  %-10s: ", "Celular");
+                    celularCliente = scanner.nextLine().toUpperCase();
+                    if (validarEntrada(celularCliente, 1, 9, "ENTERO-DATO")) {
+                      System.out.println("Celular inválido. Debe contener entre 1 y 9 dígitos numéricos.\n");
+                      continue;
+                    }
+                    break;
+                  }
 
                   cliente = new Clientes(
-                      nombresCliente.toUpperCase(),
-                      apellidosCliente.toUpperCase(),
+                      nombresCliente,
+                      apellidosCliente,
                       dniCliente,
                       celularCliente);
 
                   // PROCESO PARA GUARDAR CLIENTE
-                  agregarCliente(listaClientes, cliente);
+                  datos.clientes.agregar(cliente);
+                  datos.guardar(false);
                   venta.setCliente(cliente);
 
                   System.out.println("\n" + "=".repeat(50));
@@ -288,7 +257,8 @@ public class AppPolleria {
 
                   iniciarMenuCliente = false;
                 }
-                case 2 -> {
+                case "2" -> // Continuar venta sin registrar cliente
+                {
                   dniCliente = "00000000";
                   cliente = null;
 
@@ -296,7 +266,7 @@ public class AppPolleria {
 
                   System.out.println("\n" + "=".repeat(50));
                   System.out.println(
-                      "|" + Menus.centrarTexto(48, "DATOS POR DEFECTO A USAR") + "|");
+                      "|" + Menus.centrarTexto(48, "DATOS POR DEFECTO") + "|");
                   System.out.println("=".repeat(50));
                   System.out.printf("| %-10s: %-35s|%n", "DNI", dniCliente);
                   System.out.printf("| %-10s: %-35s|%n", "Cliente", nombresCliente);
@@ -305,73 +275,77 @@ public class AppPolleria {
 
                   iniciarMenuCliente = false;
                 }
-                case 3 ->
-                  System.out.println("Volviendo a solicitar el DNI...");
-                default ->
-                  System.out.println("Opción no válida, por favor intente de nuevo.");
+                case "3" -> System.out.println("Volviendo a solicitar el DNI...");
+                default -> System.out.println("Opción no válida, por favor intente de nuevo.");
               }
             }
           } while (iniciarMenuCliente);
+          venta.setCliente(cliente);
 
           // PROCESO PARA SELECCIONAR TIPO DE VENTA Y MESA (si aplica)
-          int opcionTipoVenta;
-          int mesaCliente;
-          String tipoVenta;
+          String opcionTipoVenta;
+          String numeroMesa;
+          String tipoVenta = "";
 
-          // MOSRA MENÚ PARA SELECCIONAR TIPO DE VENTA
-          boolean iniciarMenuTipoVenta;
+          // MOSTRAR MENÚ PARA SELECCIONAR TIPO DE VENTA
+          boolean iniciarMenuTipoVenta = true;
           do {
-            mostrarMenu("TIPO DE VENTA", "", "*", "Consumo en local", "Para llevar", "Delivery");
-            opcionTipoVenta = scanner.nextInt();
-            scanner.nextLine(); // Limpiar el buffers
+            mostrarMenu(
+                "TIPO DE VENTA",
+                "",
+                "*",
+                "Consumo en local", "Para llevar", "Delivery");
+            opcionTipoVenta = scanner.nextLine();
+
+            if (validarEntrada(opcionTipoVenta, 1, 3, "ENTERO-OPCIONES")) {
+              System.out.println("Opción no válida, por favor intente de nuevo.");
+              continue;
+            }
 
             switch (opcionTipoVenta) {
-              case 1 -> {
+              case "1" -> {
                 tipoVenta = "Consumo en local";
-                venta.setTipoVenta(tipoVenta);
 
                 boolean iniciarMenuNumeroMesa = true;
                 do {
                   System.out.println("\n" + "=".repeat(50));
                   System.out.println("|" + Menus.centrarTexto(48, "SELECCIONAR MESA") + "|");
                   System.out.println("=".repeat(50) + "\n");
-                  mostrarMesas(3, 4, mesas);
+                  mostrarMesas(3, 4, datos.mesas);
                   System.out.println("=".repeat(50));
-                  System.out.print("Ingrese solo el número de mesa: ");
-                  mesaCliente = scanner.nextInt();
-                  scanner.nextLine(); // Limpiar el buffer
+                  System.out.print("Ingrese solo el número de mesa (Ejm: 1, 5, 10, etc...): ");
+                  numeroMesa = scanner.nextLine();
 
-                  if (mesaCliente >= 1 && mesaCliente <= 12) {
-                    if (mesas[mesaCliente - 1].isEstadoMesa()) {
-                      venta.setMesa(mesas[mesaCliente - 1]);
-
-                      System.out.println("Mesa seleccionada: M-"
-                          + String.format("%02d", venta.getMesa().getNumeroMesa()));
-
-                      menuRealizarVenta.setTitulo("M-"
-                          + String.format("%02d", venta.getMesa().getNumeroMesa())
-                          + " | SELECCIONE LOS PRODUCTOS DEL PEDIDO");
-
-                      iniciarMenuNumeroMesa = false;
-                    } else {
-                      System.out.println("La mesa "
-                          + String.format("M-%02d", mesaCliente) + " ESTÁ OCUPADA"
-                          + ", por favor seleccione otra mesa.");
-                    }
-                  } else {
+                  if (validarEntrada(numeroMesa, 1, datos.mesas.length, "ENTERO-OPCIONES")) {
                     System.out.println("Número de mesa inválido, por favor intente de nuevo.");
+                    continue;
+                  }
+
+                  if (datos.mesas[Integer.parseInt(numeroMesa) - 1].isEstadoMesa()) {
+                    venta.setMesa(datos.mesas[Integer.parseInt(numeroMesa) - 1]);
+
+                    System.out.println("Mesa seleccionada: M-"
+                        + String.format("%02d", venta.getMesa().getNumeroMesa()));
+
+                    menuRealizarVenta.setTitulo("M-"
+                        + String.format("%02d", venta.getMesa().getNumeroMesa())
+                        + " | SELECCIONE LOS PRODUCTOS DEL PEDIDO");
+
+                    iniciarMenuNumeroMesa = false;
+                  } else {
+                    System.out.println("La mesa "
+                        + String.format("M-%02d", Integer.parseInt(numeroMesa)) + " ESTÁ OCUPADA"
+                        + ", por favor seleccione otra mesa.");
                   }
                 } while (iniciarMenuNumeroMesa);
               }
-              case 2 -> {
+              case "2" -> {
                 tipoVenta = "Para llevar";
-                venta.setTipoVenta(tipoVenta);
                 venta.setMesa(null);
                 System.out.println("Venta para llevar seleccionado.");
               }
-              case 3 -> {
+              case "3" -> {
                 tipoVenta = "Delivery";
-                venta.setTipoVenta(tipoVenta);
                 venta.setMesa(null);
                 System.out.println("Venta para delivery seleccionado.");
               }
@@ -379,152 +353,164 @@ public class AppPolleria {
                 System.out.println("Opción no válida, por favor intente de nuevo.");
             }
 
-            iniciarMenuTipoVenta = !(opcionTipoVenta >= 1 && opcionTipoVenta <= 3);
+            venta.setTipoVenta(tipoVenta);
+            iniciarMenuTipoVenta = false;
           } while (iniciarMenuTipoVenta);
 
           // MENU PARA SELECCIONAR PRODUCTOS
           boolean iniciarMenuRealizarVenta = true;
           do {
-            int opcionTipoProducto;
-            int opcionProducto;
+            Productos productoElegido = null;
+            String nombreProducto = "";
+            String opcionTipoProducto;
+            String opcionProducto;
 
             System.out.print(menuRealizarVenta);
-            opcionTipoProducto = scanner.nextInt();
-            scanner.nextLine(); // Limpiar el buffer
+            opcionTipoProducto = scanner.nextLine();
+            if (validarEntrada(opcionTipoProducto, 1, menuRealizarVenta.getOpciones().length, "ENTERO-OPCIONES")) {
+              System.out.println("Opción no válida, por favor intente de nuevo.");
+              continue;
+            }
 
-            boolean iniciarSubMenuElegirProducto;
             switch (opcionTipoProducto) {
-              case 1 -> { // Pollos
-                do {
+              case "1" -> // Pollos
+              {
+                while (true) {
                   System.out.print(subMenuRealizarPedidoPollos);
-                  opcionProducto = scanner.nextInt();
-                  scanner.nextLine(); // Limpiar el buffer
+                  opcionProducto = scanner.nextLine();
 
-                  if (opcionProducto >= 1 && opcionProducto <= subMenuRealizarPedidoPollos
-                      .getOpciones().length - 1) {
-                    String producto = subMenuRealizarPedidoPollos.getOpciones()[opcionProducto - 1];
-                    Productos productoElegido = Productos.buscarProductoPorNombre(listaProductosPollos, producto);
-
-                    // PROCESO PARA AGREGAR PRODUCTO
-                    venta.agregarProducto(productoElegido);
-                    // MOSTRAR DETALLES DEL PRODUCTO ELEGIDO
-                    mostrarDetallesProducto(productoElegido);
-                  } else if (opcionProducto == subMenuRealizarPedidoPollos.getOpciones().length) {
-                    System.out.println("Volviendo al menú anterior...");
-                  } else {
+                  if (validarEntrada(opcionProducto, 1, subMenuRealizarPedidoPollos.getOpciones().length,
+                      "ENTERO-OPCIONES")) {
                     System.out.println("Opción inválida, por favor intente de nuevo.");
+                    continue;
                   }
 
-                  iniciarSubMenuElegirProducto = !(opcionProducto >= 1 && opcionProducto <= subMenuRealizarPedidoPollos
-                      .getOpciones().length);
-                } while (iniciarSubMenuElegirProducto);
+                  if (Integer.parseInt(opcionProducto) == subMenuRealizarPedidoPollos.getOpciones().length) {
+                    System.out.println("Volviendo al menú anterior...");
+                  } else {
+                    nombreProducto = subMenuRealizarPedidoPollos.getOpciones()[Integer.parseInt(opcionProducto) - 1];
+                    productoElegido = Productos.buscarProductoPorNombre(
+                        datos.productosPollos.obtenerTodos(),
+                        nombreProducto);
+                  }
+
+                  break;
+                }
               }
-              case 2 -> { // Ensaladas
-                do {
+              case "2" -> // Ensaladas
+              {
+                while (true) {
                   System.out.print(subMenuRealizarPedidoEnsaladas);
-                  opcionProducto = scanner.nextInt();
-                  scanner.nextLine(); // Limpiar el buffer
+                  opcionProducto = scanner.nextLine();
 
-                  if (opcionProducto >= 1 && opcionProducto <= subMenuRealizarPedidoEnsaladas
-                      .getOpciones().length - 1) {
-                    String producto = subMenuRealizarPedidoEnsaladas.getOpciones()[opcionProducto - 1];
-                    Productos productoElegido = Productos.buscarProductoPorNombre(listaProductosEnsaladas, producto);
-
-                    // PROCESO PARA AGREGAR PRODUCTO
-                    venta.agregarProducto(productoElegido);
-                    // MOSTRAR DETALLES DEL PRODUCTO ELEGIDO
-                    mostrarDetallesProducto(productoElegido);
-                  } else if (opcionProducto == subMenuRealizarPedidoEnsaladas.getOpciones().length) {
-                    System.out.println("Volviendo al menú anterior...");
-                  } else {
+                  if (validarEntrada(opcionProducto, 1, subMenuRealizarPedidoEnsaladas.getOpciones().length,
+                      "ENTERO-OPCIONES")) {
                     System.out.println("Opción inválida, por favor intente de nuevo.");
+                    continue;
                   }
 
-                  iniciarSubMenuElegirProducto = !(opcionProducto >= 1
-                      && opcionProducto <= subMenuRealizarPedidoEnsaladas
-                          .getOpciones().length);
-                } while (iniciarSubMenuElegirProducto);
+                  if (Integer.parseInt(opcionProducto) == subMenuRealizarPedidoEnsaladas.getOpciones().length) {
+                    System.out.println("Volviendo al menú anterior...");
+                  } else {
+                    nombreProducto = subMenuRealizarPedidoEnsaladas.getOpciones()[Integer.parseInt(opcionProducto) - 1];
+                    productoElegido = Productos.buscarProductoPorNombre(
+                        datos.productosEnsaladas.obtenerTodos(),
+                        nombreProducto);
+                  }
+
+                  break;
+                }
               }
-              case 3 -> { // Postres
-                do {
+              case "3" -> // Postres
+              {
+                while (true) {
                   System.out.print(subMenuRealizarPedidoPostres);
-                  opcionProducto = scanner.nextInt();
-                  scanner.nextLine(); // Limpiar el buffer
+                  opcionProducto = scanner.nextLine();
 
-                  if (opcionProducto >= 1 && opcionProducto <= subMenuRealizarPedidoPostres
-                      .getOpciones().length - 1) {
-                    String producto = subMenuRealizarPedidoPostres.getOpciones()[opcionProducto - 1];
-                    Productos productoElegido = Productos.buscarProductoPorNombre(listaProductosPostres, producto);
-
-                    // PROCESO PARA AGREGAR PRODUCTO
-                    venta.agregarProducto(productoElegido);
-                    // MOSTRAR DETALLES DEL PRODUCTO ELEGIDO
-                    mostrarDetallesProducto(productoElegido);
-                  } else if (opcionProducto == subMenuRealizarPedidoPostres.getOpciones().length) {
-                    System.out.println("Volviendo al menú anterior...");
-                  } else {
+                  if (validarEntrada(opcionProducto, 1, subMenuRealizarPedidoPostres.getOpciones().length,
+                      "ENTERO-OPCIONES")) {
                     System.out.println("Opción inválida, por favor intente de nuevo.");
+                    continue;
                   }
 
-                  iniciarSubMenuElegirProducto = !(opcionProducto >= 1 && opcionProducto <= subMenuRealizarPedidoPostres
-                      .getOpciones().length);
-                } while (iniciarSubMenuElegirProducto);
+                  if (Integer.parseInt(opcionProducto) == subMenuRealizarPedidoPostres.getOpciones().length) {
+                    System.out.println("Volviendo al menú anterior...");
+                  } else {
+                    nombreProducto = subMenuRealizarPedidoPostres.getOpciones()[Integer.parseInt(opcionProducto) - 1];
+                    productoElegido = Productos.buscarProductoPorNombre(
+                        datos.productosPostres.obtenerTodos(),
+                        nombreProducto);
+                  }
+
+                  break;
+                }
               }
-              case 4 -> { // Bebidas
-                do {
+              case "4" -> // Bebidas
+              {
+                while (true) {
                   System.out.print(subMenuRealizarPedidoBebidas);
-                  opcionProducto = scanner.nextInt();
-                  scanner.nextLine();
+                  opcionProducto = scanner.nextLine();
 
-                  if (opcionProducto >= 1 && opcionProducto <= subMenuRealizarPedidoBebidas
-                      .getOpciones().length - 1) {
-                    String producto = subMenuRealizarPedidoBebidas.getOpciones()[opcionProducto - 1];
-                    Productos productoElegido = Productos.buscarProductoPorNombre(listaProductosBebidas, producto);
-
-                    // PROCESO PARA AGREGAR PRODUCTO
-                    venta.agregarProducto(productoElegido);
-                    // MOSTRAR DETALLES DEL PRODUCTO ELEGIDO
-                    mostrarDetallesProducto(productoElegido);
-                  } else if (opcionProducto == subMenuRealizarPedidoBebidas.getOpciones().length) {
-                    System.out.println("Volviendo al menú anterior...");
-                  } else {
+                  if (validarEntrada(opcionProducto, 1, subMenuRealizarPedidoBebidas.getOpciones().length,
+                      "ENTERO-OPCIONES")) {
                     System.out.println("Opción inválida, por favor intente de nuevo.");
+                    continue;
                   }
 
-                  iniciarSubMenuElegirProducto = !(opcionProducto >= 1 && opcionProducto <= subMenuRealizarPedidoBebidas
-                      .getOpciones().length);
-                } while (iniciarSubMenuElegirProducto);
+                  if (Integer.parseInt(opcionProducto) == subMenuRealizarPedidoBebidas.getOpciones().length) {
+                    System.out.println("Volviendo al menú anterior...");
+                  } else {
+                    nombreProducto = subMenuRealizarPedidoBebidas.getOpciones()[Integer.parseInt(opcionProducto) - 1];
+                    productoElegido = Productos.buscarProductoPorNombre(
+                        datos.productosBebidas.obtenerTodos(),
+                        nombreProducto);
+                  }
+
+                  break;
+                }
               }
-              case 5 -> { // Generar venta
+              case "5" -> // Generar venta
+              {
                 String metodoPago;
                 double montoEfectivo = 0;
-                double vuelto;
+                double vuelto = 0;
                 double totalVenta = 0.0;
                 String voucher;
 
                 for (Productos producto : venta.getProductos()) {
-                  totalVenta += producto.getPrecio(); // Suponiendo un precio fijo por producto
+                  totalVenta += producto.getPrecio();
                 }
 
-                int opcionMetodoPago;
+                String opcionMetodoPago;
                 boolean iniciarSubMenuMetodoPago = true;
                 do {
                   String totalVentaFormateado = String.format("%.2f", totalVenta);
                   subMenuMetodoPago.setTitulo("METODO DE PAGO - TOTAL S/ " + totalVentaFormateado);
                   System.out.print(subMenuMetodoPago);
-                  opcionMetodoPago = scanner.nextInt();
-                  scanner.nextLine(); // Limpiar el buffer
+                  opcionMetodoPago = scanner.nextLine();
 
-                  if (opcionMetodoPago >= 1 || opcionMetodoPago < 6) {
-                    metodoPago = subMenuMetodoPago.getOpciones()[opcionMetodoPago
-                        - 1];
+                  if (validarEntrada(opcionMetodoPago, 1, subMenuMetodoPago.getOpciones().length, "ENTERO-OPCIONES")) {
+                    System.out.println("Opción inválida, por favor intente de nuevo.");
+                    continue;
+                  }
 
-                    if (opcionMetodoPago == 1) {
+                  if (opcionMetodoPago.equals("6")) {
+                    System.out.println("Volviendo al menú anterior...");
+                    iniciarSubMenuMetodoPago = false;
+                  } else {
+                    metodoPago = subMenuMetodoPago.getOpciones()[Integer.parseInt(opcionMetodoPago) - 1];
+
+                    if (opcionMetodoPago.equals("1")) {
                       do {
                         System.out.print("Ingrese el monto en efectivo: ");
-                        montoEfectivo = scanner.nextDouble();
-                        scanner.nextLine(); // Limpiar el buffer
+                        String montoInput = scanner.nextLine();
 
+                        if (validarEntrada(montoInput, 1, 10, "DECIMAL")) {
+                          System.out.println("Monto inválido, por favor intente de nuevo.");
+                          continue;
+                        }
+
+                        montoEfectivo = Double.parseDouble(montoInput);
                         vuelto = montoEfectivo - totalVenta;
 
                         if (vuelto < 0)
@@ -532,110 +518,117 @@ public class AppPolleria {
                       } while (vuelto < 0);
                     }
 
-                    // Proceso para guardar la venta
-                    venta.setNumeroVenta(listaVentasDelDia.length + 1);
+                    // ESTABLECER DATOS DE LA VENTA
+                    venta.setNumeroVenta(ventasDeHoy.size() > 0 ? ventasDeHoy.size() + 1 : 1);
                     venta.setEncargado(nombreEncargado);
                     venta.setCliente(cliente);
-                    venta.setCantidadProductos(venta.getProductos().length);
+                    venta.setCantidadProductos(venta.getProductos().size());
                     venta.setTotal(totalVenta);
                     venta.setMetodoPago(metodoPago);
                     venta.setFechaVenta(LocalDateTime.now());
 
-                    listaVentasDelDia = agregarVenta(listaVentasDelDia, venta);
-
-                    // PROCESO O FUNCION PARA MOSTRAR VOUCHER
+                    // PROCESO PARA MOSTRAR VOUCHER
                     try {
-                      System.out.println("\nVenta registrada con éxito");
+                      datos.ventas.agregar(venta);
+                      datos.guardar(false);
+
+                      System.out.println("\n> Venta registrada con éxito");
                       Thread.sleep(1000);
 
-                      System.out.println("\nGenerando voucher de venta...");
+                      System.out.println("> Generando voucher de venta...");
                       Thread.sleep(1000);
 
-                      System.out.println("\nVoucher generado con éxito...");
+                      System.out.println("> Voucher generado con éxito...");
                       Thread.sleep(1000);
 
-                      System.out.println("\nMostrando voucher...\n");
+                      System.out.println("> Mostrando voucher...\n");
                       Thread.sleep(1000);
 
-                      montoEfectivo = opcionMetodoPago == 1 ? montoEfectivo : 0;
+                      montoEfectivo = opcionMetodoPago.equals("1") ? montoEfectivo : 0;
 
                       voucher = venta.generarVoucherVenta(montoEfectivo);
 
                       System.out.println(voucher);
                       Thread.sleep(1000);
 
-                      System.out.println("\n\nExportando voucher...");
+                      System.out.println("\n\n> Exportando voucher...");
                       Thread.sleep(1000);
 
-                      System.out.println("\nVoucher exportado con éxito...");
+                      System.out.println("> Voucher exportado con éxito...");
                       Thread.sleep(1000);
 
-                      System.out.println();
                       venta.exportarVoucherVenta(voucher);
                     } catch (InterruptedException e) {
                     }
 
                     iniciarMenuRealizarVenta = false;
                     iniciarSubMenuMetodoPago = false;
-                  } else if (opcionMetodoPago == 6) {
-                    System.out.println("Volviendo al menú anterior...");
-
-                    iniciarSubMenuMetodoPago = false;
-                  } else {
-                    System.out.println("Opción inválida, por favor intente de nuevo.");
                   }
                 } while (iniciarSubMenuMetodoPago);
               }
-              case 6 -> { // Cancelar pedido y volver al menu principal
+              case "6" -> // Cancelar pedido y volver al menu principal
+              {
                 System.out.println("Pedido cancelado, volviendo al menu principal...");
-
                 iniciarMenuRealizarVenta = false;
               }
-              default ->
-                System.out.println("Opción no válida, vuelva a elegir.");
+              default -> System.out.println("Opción no válida, vuelva a elegir.");
+            }
+
+            if (!(opcionTipoProducto.equals("5") || opcionTipoProducto.equals("6"))) {
+              if (productoElegido != null) {
+                venta.agregarProducto(productoElegido);
+                mostrarDetallesProducto(productoElegido);
+              } else {
+                System.out.println("Producto no encontrado, por favor intente de nuevo.");
+              }
             }
           } while (iniciarMenuRealizarVenta);
         }
-        case 2 -> // GESTIONAR VENTAS
+        case "2" -> // GESTIONAR VENTAS
         {
-          int opcionGestionarVentas;
+          String opcionGestionarVentas;
 
-          boolean iniciarMenuGestionarVentas = true;
           do {
             System.out.print(menuGestionarVentas);
-            opcionGestionarVentas = scanner.nextInt();
-            scanner.nextLine(); // Limpiar el buffer
+            opcionGestionarVentas = scanner.nextLine();
+
+            if (validarEntrada(opcionGestionarVentas, 1, menuGestionarVentas.getOpciones().length, "ENTERO-OPCIONES")) {
+              System.out.println("Opción no válida, por favor intente de nuevo.");
+              continue;
+            }
 
             switch (opcionGestionarVentas) {
-              case 1 -> { // Listar ventas del dia actual
-                if (listaVentasDelDia.length > 0) {
-                  Ventas.listarVentas("LISTA DE VENTAS DE HOY", listaVentasDelDia, null);
+              case "1" -> // Listar ventas del dia actual
+              {
+                if (ventasDeHoy.size() > 0) {
+                  Ventas.listarVentas("LISTA DE VENTAS DE HOY", ventasDeHoy, null);
                 } else {
                   System.out.println("No hay ventas registradas para hoy.");
                 }
               }
-              case 2 -> { // Listar ventas segun fecha
+              case "2" -> // Listar ventas segun fecha
+              {
                 System.out.println("\n" + "=".repeat(50));
                 System.out.println("|" + Menus.centrarTexto(48, "LISTA DE VENTAS POR FECHA") + "|");
                 System.out.println("=".repeat(50));
                 System.out.print("Ingresa una fecha (dd-MM-yyyy): ");
                 String fechaIngresada = scanner.nextLine();
 
+                if (validarEntrada(fechaIngresada, 10, 10, "FECHA")) {
+                  System.out.println("Formato de fecha inválido. Use este formato: dd-MM-yyyy.");
+                  break;
+                }
+
                 try {
                   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                   LocalDate fecha = LocalDate.parse(fechaIngresada, formatter);
 
-                  if (listaVentasAnteriores.length > 0) {
-                    boolean hayVentas = false;
+                  if (!ventasAnteriores.isEmpty()) {
+                    boolean hayVentas = ventasAnteriores.stream()
+                        .anyMatch(v -> fecha.isEqual(v.getFechaVenta().toLocalDate()));
 
-                    for (Ventas venta : listaVentasAnteriores) {
-                      if (fecha.isEqual(venta.getFechaVenta().toLocalDate())) {
-                        hayVentas = true;
-                        break;
-                      }
-                    }
                     if (hayVentas) {
-                      Ventas.listarVentas("LISTA DE VENTAS DEL " + fechaIngresada, listaVentasAnteriores, fecha);
+                      Ventas.listarVentas("LISTA DE VENTAS DEL " + fechaIngresada, ventasAnteriores, fecha);
                     } else {
                       System.out.println("No hay ventas registradas para esta fecha.");
                     }
@@ -646,67 +639,97 @@ public class AppPolleria {
                   System.out.println("Formato de fecha inválido. Intente con dd-MM-yyyy.");
                 }
               }
-              case 3 -> { // Buscar venta
+              case "3" -> // Buscar venta
+              {
+                String numeroVenta;
+                String fechaIngresada;
+
                 System.out.println("\n" + "=".repeat(50));
                 System.out.println("|" + Menus.centrarTexto(48, "BUSCAR VENTA") + "|");
                 System.out.println("=".repeat(50));
                 System.out.print("Ingresa una fecha (dd-MM-yyyy): ");
-                String fechaIngresada = scanner.nextLine();
+                fechaIngresada = scanner.nextLine();
 
-                System.out.print("\nIngrese el numero de venta: ");
-                int numeroVenta = scanner.nextInt();
-                scanner.nextLine(); // Limpiar el buffer
+                if (validarEntrada(fechaIngresada, 10, 10, "FECHA")) {
+                  System.out.println("Formato de fecha inválido. Use este formato: dd-MM-yyyy.");
+                  break;
+                }
+
+                do {
+                  System.out.print("\nIngrese el numero de venta: ");
+                  numeroVenta = scanner.nextLine();
+                  if (validarEntrada(numeroVenta, 1, 10, "ENTERO-OPCIONES")) {
+                    System.out.println("Número de venta inválido, por favor intente de nuevo.");
+                    continue;
+                  }
+                  break;
+                } while (true);
 
                 try {
                   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
                   LocalDate fecha = LocalDate.parse(fechaIngresada, formatter);
-                  Ventas ventaHoy = Ventas.buscarVentaFechaNumero(listaVentasDelDia, fecha, numeroVenta);
-                  Ventas ventaAnterior = Ventas.buscarVentaFechaNumero(listaVentasAnteriores, fecha, numeroVenta);
+                  Ventas ventaHoy = Ventas.buscarVentaFechaNumero(ventasDeHoy, fecha, Integer.parseInt(numeroVenta));
+                  Ventas ventaAnterior = Ventas.buscarVentaFechaNumero(ventasAnteriores, fecha,
+                      Integer.parseInt(numeroVenta));
 
                   if (ventaHoy != null) {
                     Ventas.mostrarVenta("VENTA DE HOY ENCONTRADA", ventaHoy);
                   } else if (ventaAnterior != null) {
                     Ventas.mostrarVenta("VENTA ANTERIOR ENCONTRADA", ventaAnterior);
                   } else {
-                    System.out.println("No hay ventas registradas para esta fecha y numero.");
+                    System.out.println("No hay venta registrada con numero en esa fecha.");
                   }
                 } catch (DateTimeParseException e) {
                   System.out.println("Formato de fecha inválido. Intente con dd-MM-yyyy.");
                 }
               }
-              case 4 -> { // Volver al menu principal
+              case "4" -> // Volver al menu principal
+              {
                 System.out.println("Volviendo al menu principal...");
-
-                iniciarMenuGestionarVentas = false;
               }
               default -> System.out.println("Opción no válida, por favor intente de nuevo.");
             }
-          } while (iniciarMenuGestionarVentas);
+
+            if (opcionGestionarVentas.equals("4"))
+              break;
+          } while (true);
         }
-        case 3 -> // GESTIONAR CLIENTES
+        case "3" -> // GESTIONAR CLIENTES
         {
-          int opcionGestionarClientes;
+          String opcionGestionarClientes;
 
           boolean iniciarMenuGestionarClientes = true;
           do {
             System.out.print(menuGestionarClientes);
-            opcionGestionarClientes = scanner.nextInt();
-            scanner.nextLine(); // Limpiar el buffer
+            opcionGestionarClientes = scanner.nextLine();
+
+            if (validarEntrada(opcionGestionarClientes, 1, menuGestionarClientes.getOpciones().length,
+                "ENTERO-OPCIONES")) {
+              System.out.println("Opción no válida, por favor intente de nuevo.");
+              continue;
+            }
 
             switch (opcionGestionarClientes) {
-              case 1 -> { // Listar clientes
-                if (listaClientes.length > 0) {
+              case "1" -> // Listar clientes
+              {
+                if (!listaClientes.isEmpty()) {
                   Clientes.listarClientes("LISTA DE CLIENTES REGISTRADOS", listaClientes);
                 } else {
                   System.out.println("No hay clientes registradas.");
                 }
               }
-              case 2 -> { // Buscar clientes
+              case "2" -> // Buscar clientes
+              {
                 System.out.println("\n" + "=".repeat(50));
                 System.out.println("|" + Menus.centrarTexto(48, "BUSCAR CLIENTE") + "|");
                 System.out.println("=".repeat(50));
                 System.out.print("Ingresa el DNI del cliente: ");
                 String dni = scanner.nextLine();
+
+                if (validarEntrada(dni, 8, 8, "ENTERO-DATO")) {
+                  System.out.println("DNI inválido. Debe contener exactamente 8 caracteres numéricos.");
+                  break;
+                }
 
                 Clientes cliente = Clientes.buscarClienteDNI(listaClientes, dni);
 
@@ -716,47 +739,152 @@ public class AppPolleria {
                   System.out.println("Cliente no encontrado.");
                 }
               }
-              case 3 -> { // Registrar clientes
+              case "3" -> // Registrar clientes
+              {
+                String dni = "";
+                String nombres = "";
+                String apellidos = "";
+                String celular = "";
+
                 System.out.println("\n" + "=".repeat(50));
                 System.out.println("|" + Menus.centrarTexto(48, "REGISTRAR CLIENTE") + "|");
                 System.out.println("=".repeat(50));
 
-                System.out.print("Ingresa el DNI del cliente: ");
-                String dni = scanner.nextLine();
-                System.out.println("-".repeat(50));
-                System.out.print("Ingresa el nombre del cliente: ");
-                String nombres = scanner.nextLine();
-                System.out.println("-".repeat(50));
-                System.out.print("Ingresa los apellidos del cliente: ");
-                String apellidos = scanner.nextLine();
-                System.out.println("-".repeat(50));
-                System.out.print("Ingresa el celular del cliente: ");
-                String celular = scanner.nextLine();
-                System.out.println("-".repeat(50));
+                while (true) {
+                  System.out.printf("  %-10s: ", "DNI");
+                  dni = scanner.nextLine();
+                  if (validarEntrada(dni, 8, 8, "ENTERO-DATO")) {
+                    System.out.println("DNI inválido. Debe contener exactamente 8 caracteres numéricos.\n");
+                    continue;
+                  }
+                  Clientes clienteExistente = Clientes.buscarClienteDNI(listaClientes, dni);
+                  if (clienteExistente != null) {
+                    System.out.println("El DNI ya está registrado. Por favor ingrese un DNI diferente.\n");
+                    continue;
+                  }
+                  break;
+                }
+
+                while (true) {
+                  System.out.printf("  %-10s: ", "Nombres");
+                  nombres = scanner.nextLine().toUpperCase();
+                  if (validarEntrada(nombres, 1, 100, "TEXTO")) {
+                    System.out.println("Nombres inválidos. Deben contener caracteres alfabéticos.\n");
+                    continue;
+                  }
+                  break;
+                }
+
+                while (true) {
+                  System.out.printf("  %-10s: ", "Apellidos");
+                  apellidos = scanner.nextLine().toUpperCase();
+                  if (validarEntrada(apellidos, 1, 100, "TEXTO")) {
+                    System.out.println("Apellidos inválidos. Deben contener caracteres alfabéticos.\n");
+                    continue;
+                  }
+                  break;
+                }
+
+                while (true) {
+                  System.out.printf("  %-10s: ", "Celular");
+                  celular = scanner.nextLine().toUpperCase();
+                  if (validarEntrada(celular, 9, 9, "ENTERO-DATO")) {
+                    System.out.println("Celular inválido. Debe contener entre 1 y 9 dígitos numéricos.\n");
+                    continue;
+                  }
+                  break;
+                }
 
                 Clientes cliente = new Clientes(nombres, apellidos, dni, celular);
-                // PROCESO PARA GUARDAR CLIENTE
-                listaClientes = agregarCliente(listaClientes, cliente);
 
-                Clientes.mostrarCliente("CLIENTE REGISTRADO", cliente);
+                // SUBMENU PARA CONFIRMAR GUARDADO DE CLIENTE
+                while (true) {
+                  mostrarMenu(
+                      "CONFIRMAR REGISTRO DE CLIENTE",
+                      "¿Desea guardar el cliente registrado?",
+                      "*",
+                      "Sí, guardar cliente", "No, cancelar registro de cliente");
+                  String opcionConfirmarGuardarCliente = scanner.nextLine();
+
+                  if (validarEntrada(opcionConfirmarGuardarCliente, 1, 2, "ENTERO-OPCIONES")) {
+                    System.out.println("Opción no válida, por favor intente de nuevo.");
+                    continue;
+                  }
+
+                  if (opcionConfirmarGuardarCliente.equals("1")) {
+                    datos.clientes.agregar(cliente);
+                    datos.guardar(false);
+
+                    Clientes.mostrarCliente("CLIENTE REGISTRADO", cliente);
+                  } else {
+                    System.out.println("Registro de cliente cancelado.");
+                  }
+
+                  break;
+                }
               }
-              case 4 -> { // Volver al menu principal
-                System.out.println("Volviendo al menu principal...");
+              case "4" -> // Eliminar cliente
+              {
+                System.out.println("\n" + "=".repeat(50));
+                System.out.println("|" + Menus.centrarTexto(48, "ELIMINAR CLIENTE") + "|");
+                System.out.println("=".repeat(50));
+                System.out.print("Ingresa el DNI del cliente a eliminar: ");
+                String dni = scanner.nextLine();
 
+                Clientes cliente = Clientes.buscarClienteDNI(listaClientes, dni);
+
+                // MOSTRAR CLIENTE A ELIMINAR Y SUBMENU PARA CONFIRMAR ELIMINACIÓN
+                if (cliente != null) {
+                  Clientes.mostrarCliente("CLIENTE A ELIMINAR", cliente);
+
+                  while (true) {
+                    mostrarMenu(
+                        "CONFIRMAR ELIMINACIÓN DE CLIENTE",
+                        "¿Desea eliminar el cliente seleccionado?",
+                        "*",
+                        "Sí, eliminar cliente", "No, cancelar eliminación de cliente");
+                    String opcionConfirmarEliminarCliente = scanner.nextLine();
+
+                    if (validarEntrada(opcionConfirmarEliminarCliente, 1, 2, "ENTERO-OPCIONES")) {
+                      System.out.println("Opción no válida, por favor intente de nuevo.");
+                      continue;
+                    }
+
+                    if (opcionConfirmarEliminarCliente.equals("1")) {
+                      datos.clientes.eliminar(cliente);
+                      datos.guardar(false);
+
+                      System.out.println("\n> Cliente eliminado con éxito.");
+                    } else {
+                      System.out.println("Eliminación de cliente cancelada.");
+                    }
+
+                    break;
+                  }
+                } else {
+                  System.out.println("Cliente no encontrado.");
+                }
+              }
+              case "5" -> // Volver al menu principal
+              {
+                System.out.println("Volviendo al menu principal...");
                 iniciarMenuGestionarClientes = false;
               }
               default -> System.out.println("Opción no válida, por favor intente de nuevo.");
             }
           } while (iniciarMenuGestionarClientes);
         }
-        case 4 -> // GESTIONAR PRODUCTOS
+        case "4" -> // GESTIONAR PRODUCTOS
         {
           int opcionGestionarProductos;
 
           boolean iniciarMenuGestionarProductos = true;
           do {
-            Productos[][] listaProductos = { listaProductosPollos, listaProductosEnsaladas, listaProductosPostres,
-                listaProductosBebidas };
+            HashMap<String, List<Productos>> listaProductos = new HashMap<>();
+            listaProductos.put("Pollos", new java.util.ArrayList<>(datos.productosPollos.obtenerTodos()));
+            listaProductos.put("Ensaladas", new java.util.ArrayList<>(datos.productosEnsaladas.obtenerTodos()));
+            listaProductos.put("Postres", new java.util.ArrayList<>(datos.productosPostres.obtenerTodos()));
+            listaProductos.put("Bebidas", new java.util.ArrayList<>(datos.productosBebidas.obtenerTodos()));
 
             System.out.print(menuGestionarProductos);
             opcionGestionarProductos = scanner.nextInt();
@@ -764,8 +892,15 @@ public class AppPolleria {
 
             switch (opcionGestionarProductos) {
               case 1 -> { // Listar productos
-                Menus menuCategorias = new Menus("PRODUCTOS - CATEGORIAS",
-                    new String[] { "Pollos", "Ensaladas", "Postres", "Bebidas", "Volver al menu anterior" });
+                Menus menuCategorias = new Menus(
+                    "PRODUCTOS - CATEGORIAS",
+                    new String[] {
+                        "Pollos",
+                        "Ensaladas",
+                        "Postres",
+                        "Bebidas",
+                        "Volver al menu anterior"
+                    });
 
                 boolean iniciarMenuCategorias = true;
                 do {
@@ -774,10 +909,11 @@ public class AppPolleria {
                   scanner.nextLine(); // Limpiar el buffer
 
                   switch (opcionCategoria) {
-                    case 1 -> Productos.listarProductos("CATEGORIA POLLOS", listaProductosPollos);
-                    case 2 -> Productos.listarProductos("CATEGORIA ENSALADAS", listaProductosEnsaladas);
-                    case 3 -> Productos.listarProductos("CATEGORIA POSTRES", listaProductosPostres);
-                    case 4 -> Productos.listarProductos("CATEGORIA BEBIDAS", listaProductosBebidas);
+                    case 1 -> Productos.listarProductos("CATEGORIA POLLOS", datos.productosPollos.obtenerTodos());
+                    case 2 ->
+                      Productos.listarProductos("CATEGORIA ENSALADAS", datos.productosEnsaladas.obtenerTodos());
+                    case 3 -> Productos.listarProductos("CATEGORIA POSTRES", datos.productosPostres.obtenerTodos());
+                    case 4 -> Productos.listarProductos("CATEGORIA BEBIDAS", datos.productosBebidas.obtenerTodos());
                     case 5 -> {
                       System.out.println("Volviendo al menu anterior...");
                       iniciarMenuCategorias = false;
@@ -796,18 +932,16 @@ public class AppPolleria {
                 String nombre = scanner.nextLine();
 
                 Productos producto = null;
-                for (Productos[] lista : listaProductos) {
+                for (List<Productos> lista : listaProductos.values()) {
                   producto = Productos.buscarProductoPorNombre(lista, nombre);
                   if (producto != null) {
+                    Productos.mostrarProducto("PRODUCTO ENCONTRADO", producto);
                     break;
                   }
                 }
 
-                if (producto != null) {
-                  Productos.mostrarProducto("PRODUCTO ENCONTRADO", producto);
-                } else {
+                if (producto == null)
                   System.out.println("Producto no encontrado.");
-                }
               }
 
               case 3 -> { // Registrar producto
@@ -855,15 +989,13 @@ public class AppPolleria {
 
                 Productos producto = new Productos(nombre, precio, contenido);
                 // PROCESO PARA GUARDAR PRODUCTO
-                if (opcionCategoria == 1)
-                  listaProductosPollos = agregarProducto(listaProductos[opcionCategoria - 1], producto);
-                if (opcionCategoria == 2)
-                  listaProductosEnsaladas = agregarProducto(listaProductos[opcionCategoria - 1], producto);
-                if (opcionCategoria == 3)
-                  listaProductosPostres = agregarProducto(listaProductos[opcionCategoria - 1], producto);
-                if (opcionCategoria == 4)
-                  listaProductosBebidas = agregarProducto(listaProductos[opcionCategoria - 1], producto);
-
+                switch (opcionCategoria) {
+                  case 1 -> datos.productosPollos.agregar(producto);
+                  case 2 -> datos.productosEnsaladas.agregar(producto);
+                  case 3 -> datos.productosPostres.agregar(producto);
+                  case 4 -> datos.productosBebidas.agregar(producto);
+                }
+                datos.guardar(false);
                 Productos.mostrarProducto("PRODUCTO REGISTRADO", producto);
               }
               case 4 -> { // Volver al menú principal
@@ -875,22 +1007,30 @@ public class AppPolleria {
             }
           } while (iniciarMenuGestionarProductos);
         }
-        case 5 -> // REPORTES Y CARACTERISTICAS
+        case "5" -> // REPORTES Y CARACTERISTICAS
         {
           boolean iniciarMenuReportes = true;
           do {
             System.out.print(menuReportes);
-            int opcionMenuReportes = scanner.nextInt();
-            scanner.nextLine(); // Limpiar el buffer
+            String opcionMenuReportes = scanner.nextLine();
+
+            if (validarEntrada(opcionMenuReportes, 1, menuReportes.getOpciones().length, "ENTERO-OPCIONES")) {
+              System.out.println("Opción no válida, por favor intente de nuevo.");
+              continue;
+            }
 
             switch (opcionMenuReportes) {
-              case 1 -> { // Reporte de hoy
-                int cantidad = listaVentasDelDia.length;
-                double ingresoTotal = 0;
-
-                for (Ventas venta : listaVentasDelDia) {
-                  ingresoTotal += venta.getTotal();
+              case "1" -> // Reporte de hoy
+              {
+                if (ventasDeHoy.isEmpty()) {
+                  System.out.println("No hay ventas registradas hoy.");
+                  break;
                 }
+
+                int cantidad = ventasDeHoy.size();
+                double ingresoTotal = ventasDeHoy.stream()
+                    .mapToDouble(Ventas::getTotal)
+                    .sum();
 
                 String ingresTotalFormateado = String.format("S/. %.2f", ingresoTotal);
                 System.out.println("\n" + "=".repeat(50));
@@ -900,7 +1040,8 @@ public class AppPolleria {
                 System.out.printf("| %-20s: %24s |%n", "Ingresos totales", ingresTotalFormateado);
                 System.out.println("=".repeat(50));
               }
-              case 2 -> { // Reporte segun fecha
+              case "2" -> // Reporte segun fecha
+              {
                 try {
                   System.out.println("\n" + "=".repeat(50));
                   System.out.println("|" + Menus.centrarTexto(48, "REPORTE POR FECHA") + "|");
@@ -909,268 +1050,69 @@ public class AppPolleria {
                   String fecha = scanner.nextLine();
 
                   LocalDate fechaFormateada = LocalDate.parse(fecha, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-                  int cantidad = 0;
-                  double ingresoTotal = 0;
+                  List<Ventas> ventasFiltradas = ventasAnteriores.stream()
+                      .filter(v -> v.getFechaVenta().toLocalDate().isEqual(fechaFormateada))
+                      .toList();
 
-                  for (Ventas venta : listaVentasAnteriores) {
-                    if (venta.getFechaVenta().toLocalDate().isEqual(fechaFormateada)) {
-                      cantidad++;
-                      ingresoTotal += venta.getTotal();
-                    }
+                  if (ventasFiltradas.isEmpty()) {
+                    System.out.println("No hay ventas registradas para esta fecha.");
+                    break;
                   }
 
-                  String ingresTotalFormateado = String.format("S/. %.2f", ingresoTotal);
+                  int cantidad = 0;
+                  double ingresoTotal = 0;
+                  for (Ventas venta : ventasFiltradas) {
+                    cantidad++;
+                    ingresoTotal += venta.getTotal();
+                  }
+
+                  String ingresoTotalFormateado = String.format("S/. %.2f", ingresoTotal);
                   System.out.println("\n" + "=".repeat(50));
                   System.out.println("|" + Menus.centrarTexto(48, "REPORTE DEL " + fecha) + "|");
                   System.out.println("=".repeat(50));
                   System.out.printf("| %-20s: %24d |%n", "Total de ventas", cantidad);
-                  System.out.printf("| %-20s: %24s |%n", "Ingresos totales", ingresTotalFormateado);
+                  System.out.printf("| %-20s: %24s |%n", "Ingresos totales", ingresoTotalFormateado);
                   System.out.println("=".repeat(50));
                 } catch (Exception e) {
                   System.out.println("Formato de fecha inválido. Intente con dd-MM-yyyy.");
                 }
               }
-              case 3 -> { // Mostrar producto más vendido
-                // PRODUCTO MAS VENDIDO DESDE EN PASADAS
-                String[] productosNoRepetidos = new String[100];
-                int indiceProductosNoRepetidos = 0;
-                for (Ventas venta : listaVentasAnteriores) {
-                  for (Productos producto : venta.getProductos()) {
-                    boolean existeEnProductosNoRepetidos = false;
-
-                    for (String productosNoRepetido : productosNoRepetidos) {
-                      if (productosNoRepetido == null) {
-                        break;
-                      } else if (productosNoRepetido.equals(producto.getNombre())) {
-                        existeEnProductosNoRepetidos = true;
-                        break;
-                      }
-                    }
-
-                    if (!existeEnProductosNoRepetidos) {
-                      productosNoRepetidos[indiceProductosNoRepetidos] = producto.getNombre();
-                      indiceProductosNoRepetidos++;
-                    }
-                  }
-                }
-
-                int[] conteo = new int[100];
-                for (int i = 0; i < productosNoRepetidos.length; i++) {
-                  if (productosNoRepetidos[i] == null) {
-                    break;
-                  }
-                  for (Ventas venta : listaVentasAnteriores) {
-                    for (Productos producto : venta.getProductos()) {
-                      if (productosNoRepetidos[i].equals(producto.getNombre())) {
-                        conteo[i]++;
-                      }
-                    }
-                  }
-                }
-
-                int indiceMejorProducto = 0;
-                for (int i = 0; i < productosNoRepetidos.length; i++) {
-                  if (productosNoRepetidos[i] == null) {
-                    break;
-                  }
-                  if (conteo[i] > conteo[indiceMejorProducto]) {
-                    indiceMejorProducto = i;
-                  }
-                }
-
+              case "3" -> // Mostrar producto más vendido
+              {
                 System.out.println("\n" + "=".repeat(50));
-                System.out.println("|" + Menus.centrarTexto(48, "PRODUCTO MÁS VENDIDO") + "|");
+                System.out.println("|" + Menus.centrarTexto(48, "PRODUCTOS MÁS VENDIDOS") + "|");
                 System.out.println("=".repeat(50));
-                System.out.printf("| %-10s: %-34s |%n", "Histórico",
-                    productosNoRepetidos[indiceMejorProducto] + " (" + conteo[indiceMejorProducto] + ")");
-
-                // PRODUCTO MAS VENDIDO HOY
-                productosNoRepetidos = new String[100];
-                indiceProductosNoRepetidos = 0;
-                for (Ventas venta : listaVentasDelDia) {
-                  for (Productos producto : venta.getProductos()) {
-                    boolean existeEnProductosNoRepetidos = false;
-
-                    for (String productosNoRepetido : productosNoRepetidos) {
-                      if (productosNoRepetido == null) {
-                        break;
-                      } else if (productosNoRepetido.equals(producto.getNombre())) {
-                        existeEnProductosNoRepetidos = true;
-                        break;
-                      }
-                    }
-
-                    if (!existeEnProductosNoRepetidos) {
-                      productosNoRepetidos[indiceProductosNoRepetidos] = producto.getNombre();
-                      indiceProductosNoRepetidos++;
-                    }
-                  }
-                }
-
-                conteo = new int[100];
-                for (int i = 0; i < productosNoRepetidos.length; i++) {
-                  if (productosNoRepetidos[i] == null) {
-                    break;
-                  }
-                  for (Ventas venta : listaVentasDelDia) {
-                    for (Productos producto : venta.getProductos()) {
-                      if (productosNoRepetidos[i].equals(producto.getNombre())) {
-                        conteo[i]++;
-                      }
-                    }
-                  }
-                }
-
-                indiceMejorProducto = 0;
-                for (int i = 0; i < productosNoRepetidos.length; i++) {
-                  if (productosNoRepetidos[i] == null) {
-                    break;
-                  }
-                  if (conteo[i] > conteo[indiceMejorProducto]) {
-                    indiceMejorProducto = i;
-                  }
-                }
-                System.out.printf("| %-10s: %-34s |%n", "Hoy",
-                    productosNoRepetidos[indiceMejorProducto] + " (" + conteo[indiceMejorProducto] + ")");
+                mostrarMejorProducto("Histórico", ventasAnteriores);
+                mostrarMejorProducto("Hoy", ventasDeHoy);
                 System.out.println("=".repeat(50));
               }
-
-              case 4 -> { // Mostrar cliente mas frecuente
-                Clientes cliente;
-                // PRODUCTO MAS VENDIDO DESDE EN PASADAS
-                String[] clientesNoRepetidos = new String[100];
-                int indiceClientesNoRepetidos = 0;
-                for (Ventas venta : listaVentasAnteriores) {
-                  boolean existeEnClientesNoRepetidos = false;
-
-                  for (String dni : clientesNoRepetidos) {
-                    if (dni == null) {
-                      break;
-                    } else if (dni.equals(venta.getCliente().getDni())) {
-                      existeEnClientesNoRepetidos = true;
-                      break;
-                    }
-                  }
-
-                  if (!existeEnClientesNoRepetidos) {
-                    clientesNoRepetidos[indiceClientesNoRepetidos] = venta.getCliente().getDni();
-                    indiceClientesNoRepetidos++;
-                  }
-                }
-
-                int[] conteo = new int[100];
-                for (int i = 0; i < clientesNoRepetidos.length; i++) {
-                  if (clientesNoRepetidos[i] == null) {
-                    break;
-                  }
-                  for (Ventas venta : listaVentasAnteriores) {
-                    if (clientesNoRepetidos[i].equals(venta.getCliente().getDni())) {
-                      conteo[i]++;
-                    }
-
-                  }
-                }
-
-                int indiceClienteFrecuente = 0;
-                for (int i = 0; i < clientesNoRepetidos.length; i++) {
-                  if (clientesNoRepetidos[i] == null) {
-                    break;
-                  }
-                  if (conteo[i] > conteo[indiceClienteFrecuente]) {
-                    indiceClienteFrecuente = i;
-                  }
-                }
-
-                cliente = Clientes.buscarClienteDNI(listaClientes, clientesNoRepetidos[indiceClienteFrecuente]);
+              case "4" -> { // Mostrar cliente mas frecuente
                 System.out.println("\n" + "=".repeat(50));
-                System.out.println("|" + Menus.centrarTexto(48, "CLIENTE MAS FRECUENTE") + "|");
+                System.out.println("|" + Menus.centrarTexto(48, "CLIENTE MÁS FRECUENTE") + "|");
                 System.out.println("=".repeat(50));
-                System.out.printf("| %-10s: %-34s |%n", "Histórico",
-                    cliente.getNombres() + " " + cliente.getApellidos() + " (" + conteo[indiceClienteFrecuente] + ")");
-
-                // PRODUCTO MAS VENDIDO HOY
-                clientesNoRepetidos = new String[100];
-                indiceClientesNoRepetidos = 0;
-                for (Ventas venta : listaVentasDelDia) {
-
-                  boolean existeEnProductosNoRepetidos = false;
-
-                  for (String productosNoRepetido : clientesNoRepetidos) {
-                    if (productosNoRepetido == null) {
-                      break;
-                    } else if (productosNoRepetido.equals(venta.getCliente().getDni())) {
-                      existeEnProductosNoRepetidos = true;
-                      break;
-                    }
-                  }
-
-                  if (!existeEnProductosNoRepetidos) {
-                    clientesNoRepetidos[indiceClientesNoRepetidos] = venta.getCliente().getDni();
-                    indiceClientesNoRepetidos++;
-                  }
-                }
-
-                conteo = new int[100];
-                for (int i = 0; i < clientesNoRepetidos.length; i++) {
-                  if (clientesNoRepetidos[i] == null) {
-                    break;
-                  }
-                  for (Ventas venta : listaVentasDelDia) {
-                    if (clientesNoRepetidos[i].equals(venta.getCliente().getDni())) {
-                      conteo[i]++;
-                    }
-                  }
-                }
-
-                indiceClienteFrecuente = 0;
-                for (int i = 0; i < clientesNoRepetidos.length; i++) {
-                  if (clientesNoRepetidos[i] == null) {
-                    break;
-                  }
-                  if (conteo[i] > conteo[indiceClienteFrecuente]) {
-                    indiceClienteFrecuente = i;
-                  }
-                }
-
-                cliente = Clientes.buscarClienteDNI(listaClientes, clientesNoRepetidos[indiceClienteFrecuente]);
-                System.out.printf("| %-10s: %-34s |%n", "Hoy",
-                    cliente.getNombres() + " " + cliente.getApellidos() + " (" + conteo[indiceClienteFrecuente] + ")");
+                mostrarMejorCliente("Histórico", ventasAnteriores, datos.clientes);
+                mostrarMejorCliente("Hoy", ventasDeHoy, datos.clientes);
                 System.out.println("=".repeat(50));
               }
-              case 5 -> { // Volver al menu principal
+              case "5" -> // Volver al menu principal
+              {
                 System.out.println("Volviendo al menu principal...");
-
                 iniciarMenuReportes = false;
               }
               default -> System.out.println("Opción no válida, por favor intente de nuevo.");
             }
-
           } while (iniciarMenuReportes);
         }
-        case 6 -> {// SALIR
+        case "6" -> // SALIR
+        {
           scanner.close();
           System.out.println("\nSaliendo del programa...");
-          System.out
-              .println("PROGRAMA FINALIZADO. ¡GRACIAS POR USAR LA APLICACION!");
+          System.out.println("PROGRAMA FINALIZADO. ¡GRACIAS POR USAR LA APLICACION!");
           iniciarPrograma = false;
         }
-        default ->
-          System.out.println("Opción no válida, por favor intente de nuevo.");
+        default -> System.out.println("Opción no válida, por favor intente de nuevo.");
       }
     } while (iniciarPrograma);
-
-  }
-
-  public static Mesas[] inicializarMesas(Mesas[] arrayMesas) {
-    arrayMesas = new Mesas[12];
-    int indexMesa = 0;
-
-    for (int fila = 0; fila < 12; fila++) {
-      arrayMesas[indexMesa] = new Mesas(indexMesa + 1, ((fila + 1) % 2 == 0));
-      indexMesa++;
-    }
-
-    return arrayMesas;
   }
 
   public static void mostrarMesas(int filas, int columnas, Mesas[] mesas) {
@@ -1204,7 +1146,7 @@ public class AppPolleria {
       for (int col = 0; col < columnas; col++) {
         if (indexMesaEstado < mesas.length) {
           Mesas mesa = mesas[indexMesaEstado++];
-          String estado = mesa.isEstadoMesa() ? "[ ]" : "[X]"; // true = ocupado
+          String estado = mesa.isEstadoMesa() ? "[ ]" : "[X]"; // true = libre
           System.out.print("  | " + estado + "  |  ");
         } else {
           System.out.print("  |        |  ");
@@ -1221,20 +1163,6 @@ public class AppPolleria {
     System.out.println(Menus.centrarTexto(50, "Ocupada: [X]    |    Libre: []"));
   }
 
-  public static Ventas[] agregarVenta(Ventas[] listaVentas, Ventas venta) {
-    Ventas[] nuevoArreglo = new Ventas[listaVentas.length + 1];
-    System.arraycopy(listaVentas, 0, nuevoArreglo, 0, listaVentas.length);
-    nuevoArreglo[listaVentas.length] = venta;
-    return nuevoArreglo;
-  }
-
-  public static Clientes[] agregarCliente(Clientes[] listaClientes, Clientes cliente) {
-    Clientes[] nuevoArreglo = new Clientes[listaClientes.length + 1];
-    System.arraycopy(listaClientes, 0, nuevoArreglo, 0, listaClientes.length);
-    nuevoArreglo[listaClientes.length] = cliente;
-    return nuevoArreglo;
-  }
-
   public static void mostrarMenu(String titulo, String mensajeOpcional, String charPrincipal, String... opciones) {
     System.out.println();
     System.out.println(charPrincipal.repeat(50));
@@ -1242,7 +1170,7 @@ public class AppPolleria {
     System.out.println(charPrincipal.repeat(50));
 
     if (!mensajeOpcional.equals("")) {
-      System.out.println("|" + Menus.centrarTexto(48, "¿Desea registrar al cliente?") + "|");
+      System.out.println("|" + Menus.centrarTexto(48, mensajeOpcional) + "|");
       System.out.printf("| %-47s|%n", "");
     }
 
@@ -1254,17 +1182,10 @@ public class AppPolleria {
     System.out.print("Seleccione una opción: ");
   }
 
-  public static Productos[] agregarProducto(Productos[] listaProductos, Productos producto) {
-    Productos[] nuevoArreglo = new Productos[listaProductos.length + 1];
-    System.arraycopy(listaProductos, 0, nuevoArreglo, 0, listaProductos.length);
-    nuevoArreglo[listaProductos.length] = producto;
-    return nuevoArreglo;
-  }
-
-  public static String[] enviarOpciones(Productos[] listaProductos) {
-    String[] arrayOpciones = new String[listaProductos.length + 1];
-    for (int i = 0; i < listaProductos.length; i++) {
-      arrayOpciones[i] = listaProductos[i].getNombre();
+  public static String[] enviarOpciones(List<Productos> listaProductos) {
+    String[] arrayOpciones = new String[listaProductos.size() + 1];
+    for (int i = 0; i < listaProductos.size(); i++) {
+      arrayOpciones[i] = listaProductos.get(i).getNombre();
     }
 
     arrayOpciones[arrayOpciones.length - 1] = "Volver al menú anterior";
@@ -1273,7 +1194,7 @@ public class AppPolleria {
   }
 
   public static void mostrarDetallesProducto(Productos producto) {
-    System.out.println("\nPRODUCTO AGREGADO:");
+    System.out.println("\nPRODUCTO AGREGADO");
     System.out.println("-".repeat(50));
     System.out.printf("| %-10s: %-35s|%n", "Producto", producto.getNombre());
     System.out.printf("| %-10s: S/. %-31.2f|%n", "Precio", producto.getPrecio());
@@ -1286,4 +1207,106 @@ public class AppPolleria {
     System.out.println("-".repeat(50));
   }
 
+  public static boolean validarEntrada(String entrada, int min, int max, String tipo) {
+    if (entrada == null || entrada.isBlank() || entrada.isEmpty()) {
+      return true; // Hay error
+    }
+
+    // Validaciones por tipo de dato
+    switch (tipo) {
+      case "TEXTO":
+        // Solo letras y espacios
+        return !entrada.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+")
+            || entrada.length() < min
+            || entrada.length() > max;
+
+      case "ENTERO-OPCIONES":
+        return !entrada.matches("\\d+") || Integer.parseInt(entrada) < min || Integer.parseInt(entrada) > max;
+
+      case "ENTERO-DATO":
+        return !entrada.matches("\\d+") || entrada.length() < min || entrada.length() > max;
+
+      case "DECIMAL":
+        // ^\\d+ -> Empieza con uno o más dígitos
+        // (\\.\\d{1,2})? -> Opcionalmente un punto seguido de 1 o 2 dígitos
+        return !entrada.matches("\\d+(\\.\\d{1,2})?") || entrada.length() < min || entrada.length() > max;
+
+      case "FECHA":
+        // Acepta números y guiones (ej: 12-12-2024)
+        return !entrada.matches("[0-9\\-]+");
+
+      default:
+        return true; // Tipo desconocido es error
+    }
+  }
+
+  private static void mostrarMejorProducto(String etiqueta, List<Ventas> listaVentas) {
+    if (listaVentas.isEmpty()) {
+      System.out.printf("| %-10s: %-34s |%n", etiqueta, "No hay ventas registradas");
+      return;
+    }
+
+    HashMap<String, Integer> conteoProductos = new HashMap<>();
+
+    for (Ventas venta : listaVentas) {
+      for (Productos producto : venta.getProductos()) {
+        String nombre = producto.getNombre();
+        conteoProductos.put(nombre, conteoProductos.getOrDefault(nombre, 0) + 1);
+      }
+    }
+
+    String mejorProducto = "";
+    int maxVentas = 0;
+
+    for (var entry : conteoProductos.entrySet()) {
+      if (entry.getValue() > maxVentas) {
+        maxVentas = entry.getValue();
+        mejorProducto = entry.getKey();
+      }
+    }
+
+    if (maxVentas > 0) {
+      System.out.printf("| %-10s: %-34s |%n", etiqueta, mejorProducto + " (" + maxVentas + ")");
+    } else {
+      System.out.printf("| %-10s: %-34s |%n", etiqueta, "N/A");
+    }
+  }
+
+  private static void mostrarMejorCliente(String etiqueta, List<Ventas> listaVentas,
+      Repositorio<Clientes> repoClientes) {
+    if (listaVentas.isEmpty()) {
+      System.out.printf("| %-10s: %-34s |%n", etiqueta, "No hay ventas registradas");
+      return;
+    }
+
+    HashMap<String, Integer> conteoClientes = new HashMap<>();
+
+    for (Ventas venta : listaVentas) {
+      if (venta.getCliente() != null) {
+        String dni = venta.getCliente().getDni();
+        conteoClientes.put(dni, conteoClientes.getOrDefault(dni, 0) + 1);
+      }
+    }
+
+    String mejorDni = "";
+    int maxCompras = 0;
+
+    for (var entry : conteoClientes.entrySet()) {
+      if (entry.getValue() > maxCompras) {
+        maxCompras = entry.getValue();
+        mejorDni = entry.getKey();
+      }
+    }
+
+    if (maxCompras > 0) {
+      final String dniBuscado = mejorDni;
+      Clientes cliente = repoClientes.buscar(c -> c.getDni().equals(dniBuscado));
+
+      String nombreMostrado = (cliente != null) ? cliente.getNombres() : "DNI: " + mejorDni;
+
+      System.out.printf("| %-10s: %-34s |%n", etiqueta, nombreMostrado + " (" + maxCompras + ")");
+    } else {
+      System.out.printf("| %-10s: %-34s |%n", etiqueta, "N/A");
+    }
+  }
 }

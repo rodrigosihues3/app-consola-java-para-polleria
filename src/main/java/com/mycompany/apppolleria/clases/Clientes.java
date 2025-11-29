@@ -1,7 +1,11 @@
 package com.mycompany.apppolleria.clases;
 
-public class Clientes {
+import java.io.Serializable;
+import java.util.List;
 
+public class Clientes implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private String nombres;
     private String apellidos;
     private String dni;
@@ -49,17 +53,17 @@ public class Clientes {
         this.celular = celular;
     }
 
-    public static Clientes buscarClienteDNI(Clientes[] listaClientes, String dni) {
+    public static Clientes buscarClienteDNI(List<Clientes> listaClientes, String dni) {
         for (Clientes cliente : listaClientes) {
             if (cliente.getDni().equals(dni)) {
-                return cliente; // Retorna el cliente encontrado
+                return cliente;
             }
         }
 
         return null;
     }
 
-    public static void listarClientes(String titulo, Clientes[] listaClientes) {
+    public static void listarClientes(String titulo, List<Clientes> listaClientes) {
         System.out.println("\n" + "=".repeat(60));
         System.out.println("|" + Menus.centrarTexto(58, titulo) + "|");
         System.out.println("=".repeat(60));

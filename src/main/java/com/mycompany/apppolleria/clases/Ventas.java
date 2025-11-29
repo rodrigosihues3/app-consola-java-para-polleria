@@ -1,17 +1,21 @@
 package com.mycompany.apppolleria.clases;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Ventas {
+public class Ventas implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private int numeroVenta;
     private String encargado;
     private Clientes cliente;
     private String tipoVenta;
     private Mesas mesa;
-    private Productos[] productos = new Productos[0];
+    private List<Productos> productos = new ArrayList<>();
     private int cantidadProductos;
     private double total;
     private String metodoPago;
@@ -21,7 +25,7 @@ public class Ventas {
     }
 
     public Ventas(int numeroVenta, String encargado, Clientes cliente, String tipoVenta, Mesas mesa,
-            Productos[] productos,
+            List<Productos> productos,
             int cantidadProductos, double total, String metodoPago, LocalDateTime fechaVenta) {
         this.numeroVenta = numeroVenta;
         this.encargado = encargado;
@@ -75,11 +79,11 @@ public class Ventas {
         this.mesa = mesa;
     }
 
-    public Productos[] getProductos() {
+    public List<Productos> getProductos() {
         return productos;
     }
 
-    public void setProductos(Productos[] productos) {
+    public void setProductos(List<Productos> productos) {
         this.productos = productos;
     }
 
@@ -117,13 +121,10 @@ public class Ventas {
 
     // MÉTODOS LÓGICOS
     public void agregarProducto(Productos productoNuevo) {
-        Productos[] nuevoArreglo = new Productos[productos.length + 1];
-        System.arraycopy(productos, 0, nuevoArreglo, 0, productos.length);
-        nuevoArreglo[productos.length] = productoNuevo;
-        productos = nuevoArreglo;
+        this.productos.add(productoNuevo);
     }
 
-    public static Ventas buscarVentaFechaNumero(Ventas[] listaVentas, LocalDate fecha, int numeroVenta) {
+    public static Ventas buscarVentaFechaNumero(List<Ventas> listaVentas, LocalDate fecha, int numeroVenta) {
         for (Ventas venta : listaVentas) {
             if (venta.getFechaVenta().toLocalDate().isEqual(fecha)
                     && venta.getNumeroVenta() == numeroVenta) {
@@ -134,24 +135,27 @@ public class Ventas {
         return null;
     }
 
-    public static void listarVentas(String titulo, Ventas[] listaVentas, LocalDate fecha) {
+    public static void listarVentas(String titulo, List<Ventas> listaVentas, LocalDate fecha) {
         System.out.println("\n" + "=".repeat(60));
         System.out.println("|" + Menus.centrarTexto(58, titulo) + "|");
         System.out.println("=".repeat(60));
 
         for (Ventas venta : listaVentas) {
             if (fecha == null || fecha.isEqual(venta.getFechaVenta().toLocalDate())) {
-                String cliente = venta.getCliente() != null
-                        ? venta.getCliente().getNombres() + " " + venta.getCliente().getApellidos()
-                        : "CLIENTE NO REGISTRADO";
                 String fechaFormateada = venta.getFechaVenta()
                         .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
                 String numVentaFormateado = String.format("V-%04d", venta.getNumeroVenta());
+                String dni = "N/A";
+                String cliente = "CLIENTE NO REGISTRADO";
+                if (venta.getCliente() != null) {
+                    cliente = venta.getCliente().getNombres() + " " + venta.getCliente().getApellidos();
+                    dni = venta.getCliente().getDni();
+                }
 
                 System.out.printf("| %-15s: %-39s |%n", "N° DE VENTA", numVentaFormateado);
                 System.out.printf("| %-15s: %-39s |%n", "ENCARGADO", venta.getEncargado());
                 System.out.printf("| %-15s: %-39s |%n", "CLIENTE", cliente);
-                System.out.printf("| %-15s: %-39s |%n", "DNI", venta.getCliente().getDni());
+                System.out.printf("| %-15s: %-39s |%n", "DNI", dni);
                 if (venta.getTipoVenta().equals("Consumo en local")) {
                     System.out.printf("| %-15s: %-39s |%n", "MESA", venta.getMesa().getNumeroMesa());
                 }
@@ -174,17 +178,20 @@ public class Ventas {
         System.out.println("|" + Menus.centrarTexto(58, titulo) + "|");
         System.out.println("=".repeat(60));
 
-        String cliente = venta.getCliente() != null
-                ? venta.getCliente().getNombres() + venta.getCliente().getApellidos()
-                : "CLIENTE NO REGISTRADO";
         String fechaFormateada = venta.getFechaVenta()
                 .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
         String numVentaFormateado = String.format("V-%04d", venta.getNumeroVenta());
+        String dni = "N/A";
+        String cliente = "CLIENTE NO REGISTRADO";
+        if (venta.getCliente() != null) {
+            cliente = venta.getCliente().getNombres() + venta.getCliente().getApellidos();
+            dni = venta.getCliente().getDni();
+        }
 
         System.out.printf("| %-15s: %-39s |%n", "N° DE VENTA", numVentaFormateado);
         System.out.printf("| %-15s: %-39s |%n", "ENCARGADO", venta.getEncargado());
         System.out.printf("| %-15s: %-39s |%n", "CLIENTE", cliente);
-        System.out.printf("| %-15s: %-39s |%n", "DNI", venta.getCliente().getDni());
+        System.out.printf("| %-15s: %-39s |%n", "DNI", dni);
         if (venta.getTipoVenta().equals("Consumo en local")) {
             System.out.printf("| %-15s: %-39s |%n", "MESA", venta.getMesa().getNumeroMesa());
         }
@@ -249,8 +256,8 @@ public class Ventas {
         sb.append(String.format("%-35s %-15s%n", "TOTAL A PAGAR", strMonto));
         sb.append("-".repeat(longitud)).append("\n").append("\n");
 
-        // Se muestra olo si es efectivo
-        if (metodoPago.equalsIgnoreCase("Efectivo")) {
+        // Se muestra solo si es efectivo
+        if ("Efectivo".equalsIgnoreCase(metodoPago)) {
             sb.append("-".repeat(longitud)).append("\n");
             strMonto = "S/. " + String.format("%.2f", efectivoEntregado);
             sb.append(String.format("%-35s %-15s%n", "Paga con", strMonto));
@@ -272,7 +279,7 @@ public class Ventas {
 
         try (java.io.FileWriter writer = new java.io.FileWriter(nombreArchivo)) {
             writer.write(voucher);
-            System.out.println("Voucher generado correctamente: " + nombreArchivo);
+            System.out.println("> Voucher generado correctamente: " + nombreArchivo);
         } catch (java.io.IOException e) {
             System.out.println("Error al generar el voucher: " + e.getMessage());
         }

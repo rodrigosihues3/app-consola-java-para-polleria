@@ -1,7 +1,10 @@
 package com.mycompany.apppolleria.clases;
 
-public class Mesas {
+import java.io.Serializable;
 
+public class Mesas implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     private int numeroMesa;
     private boolean estadoMesa;
 

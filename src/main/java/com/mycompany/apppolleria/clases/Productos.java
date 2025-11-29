@@ -1,7 +1,11 @@
 package com.mycompany.apppolleria.clases;
 
-public class Productos {
+import java.io.Serializable;
+import java.util.List;
 
+public class Productos implements Serializable {
+
+  private static final long serialVersionUID = 1L;
   private String nombre;
   private double precio;
   private String[] contenido;
@@ -39,7 +43,7 @@ public class Productos {
     this.contenido = contenido;
   }
 
-  public static Productos buscarProductoPorNombre(Productos[] listaProductos, String nombre) {
+  public static Productos buscarProductoPorNombre(List<Productos> listaProductos, String nombre) {
     if (nombre == null || nombre.trim().isEmpty()) {
       return null;
     }
@@ -54,7 +58,7 @@ public class Productos {
     return null;
   }
 
-  public static void listarProductos(String titulo, Productos[] listaProductos) {
+  public static void listarProductos(String titulo, List<Productos> listaProductos) {
     System.out.println("\n" + "=".repeat(60));
     System.out.println("|" + Menus.centrarTexto(58, titulo) + "|");
     System.out.println("=".repeat(60));
