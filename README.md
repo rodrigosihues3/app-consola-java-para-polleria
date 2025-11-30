@@ -1,16 +1,11 @@
-# 📋 INFORME TÉCNICO COMPLETO: APP POLERÍA - SISTEMA DE GESTIÓN PARA POLLERÍAS
+# 📋 INFORME: APP POLERÍA - SISTEMA DE GESTIÓN PARA POLLERÍAS
 
 ## 1. INFORMACIÓN GENERAL DEL PROYECTO
 
 ### 1.1 Identificación del Proyecto
 - **Nombre**: App Polería - Sistema de Gestión para Pollerías
 - **Tipo**: Aplicación de Consola (CLI - Command Line Interface)
-- **Contexto**: Proyecto académico de Programación Orientada a Objetos (POO)
-- **Institución**: Universidad Tecnológica del Perú (UTP)
-- **Período Académico**: 2025-II
-- **Ciclo/Nivel**: Carrera de Ingeniería en Informática - Curso POO
-- **Desarrollador**: Rodrigo Sihues Yanqui
-- **Repositorio**: app-consola-java-para-polleria (rama main)
+- **Contexto**: Proyecto académico
 
 ### 1.2 Propósito General
 La aplicación tiene como objetivo principal proporcionar un **sistema integral de gestión para establecimientos de comida rápida tipo pollerías**, permitiendo administrar de manera eficiente:
@@ -37,17 +32,18 @@ En un contexto pre-digital o para pequeñas pollerías, los procesos manuales pr
 ## 2. STACK TECNOLÓGICO
 
 ### 2.1 Lenguaje de Programación
-- **Lenguaje**: Java (Programación Orientada a Objetos)
-- **Versión**: 21 (según `pom.xml`: `<maven.compiler.release>21</maven.compiler.release>`)
+- **Lenguaje**: Java
+- **Versión**: 21
 - **Características de Java 21 utilizadas**:
   - Expresiones Switch mejoradas (Switch expressions con `->`):
     ```java
     case "1" -> // Realizar venta
     case "2" -> // Gestionar ventas
     ```
-  - Records (potencialmente, aunque el proyecto usa clases tradicionales)
-  - Streams y APIs funcionales
+  - Streams
   - LocalDateTime para manejo de fechas modernas
+  - Clases genericas
+  - Arreglos avanzados (List, Set, HashMap)
 
 ### 2.2 Herramientas de Construcción y Gestión de Dependencias
 - **Build Tool**: Apache Maven 4.0.0
@@ -82,6 +78,7 @@ El proyecto **no tiene dependencias externas** en el `pom.xml`. Utiliza únicame
 app-consola-java-para-polleria/
 ├── pom.xml                                    # Configuración de Maven
 ├── nb-configuration.xml                       # Configuración de NetBeans
+├── polleria.dat                               # Datos persistentes
 ├── src/
 │   └── main/
 │       └── java/
@@ -159,7 +156,7 @@ Este es el flujo más complejo de la aplicación. Comprende:
 
 **Paso 2: Selección de Tipo de Venta**
 - Consumo en local (requiere seleccionar mesa)
-- Para llevar (take-away)
+- Para llevar
 - Delivery
 
 **Paso 3: Visualización y Selección de Mesas (si aplica)**
@@ -186,7 +183,7 @@ Este es el flujo más complejo de la aplicación. Comprende:
 
 **Paso 6: Generación y Exportación de Venta**
 - Asigna número de venta
-- Registra encargado (en este caso, "MARCOS")
+- Registra encargado
 - Calcula total
 - Guarda en base de datos
 - Genera voucher (comprobante) con formato profesional
@@ -760,7 +757,7 @@ String fechaFormato = ahora.format(formatter);
 ```
 
 ### 6.6 Genéricos en Java
-La clase `Repositorio<T>` es un ejemplo de generics:
+La clase `Repositorio<T>` es un ejemplo de clase genérica:
 ```java
 public class Repositorio<T> implements Serializable {
     private List<T> lista;
@@ -1138,10 +1135,10 @@ mvn exec:java -Dexec.mainClass="com.mycompany.apppolleria.AppPolleria"
 
 ---
 
-## 16. RESUMEN EJECUTIVO
+## 16. RESUMEN RÁPIDO
 
 ### 16.1 ¿Qué es?
-Una aplicación de consola Java desarrollada como proyecto académico de POO que simula un **sistema completo de gestión para pollerías**, permitiendo realizar ventas, gestionar productos, clientes, mesas y generar reportes.
+Una aplicación de consola Java desarrollada como proyecto académico que simula un **sistema completo de gestión para pollerías**, permitiendo realizar ventas, gestionar productos, clientes, mesas y generar reportes.
 
 ### 16.2 ¿Qué hace?
 - Registra y persiste ventas con detalles completos
@@ -1178,7 +1175,4 @@ Una aplicación de consola Java desarrollada como proyecto académico de POO que
 
 **FIN DEL INFORME TÉCNICO**
 
-Este informe proporciona una visión completa y detallada del proyecto, incluyendo su arquitectura, funcionalidades, implementación técnica, flujos de proceso, y características educativas desde la perspectiva de un curso de Programación Orientada a Objetos.
-
-**Generado**: 29 de noviembre de 2025
-**Archivo**: INFORME_TECNICO.md
+Este informe proporciona una visión completa y detallada del proyecto, incluyendo su arquitectura, funcionalidades, implementación técnica, y flujos de proceso.
