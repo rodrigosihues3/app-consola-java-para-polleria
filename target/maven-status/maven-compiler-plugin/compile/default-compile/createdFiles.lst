@@ -1,6 +1,8 @@
-com\mycompany\apppolleria\clases\Mesas.class
+com\mycompany\apppolleria\clases\Datos.class
 com\mycompany\apppolleria\clases\Productos.class
+com\mycompany\apppolleria\clases\Repositorio.class
 com\mycompany\apppolleria\clases\Ventas.class
 com\mycompany\apppolleria\clases\Menus.class
+com\mycompany\apppolleria\clases\Mesas.class
 com\mycompany\apppolleria\clases\Clientes.class
 com\mycompany\apppolleria\AppPolleria.class
